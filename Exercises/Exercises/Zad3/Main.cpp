@@ -13,7 +13,7 @@ int main()
 	//BisectionMethods::run(-15, 5);
 	//FalsiMethods::run(15, 5);
 	//NewtonMethods::run();
-	SecantMethods::run();
+	//SecantMethods::run();
 
 	std::cin.get();
 	return 0;

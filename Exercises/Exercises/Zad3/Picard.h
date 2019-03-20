@@ -33,19 +33,35 @@ namespace PicardMethods
 
 	static void run()
 	{
+		std::cout.precision(22);
 		double ksi = 1.0;
 		double previousKsi = 0.0;
-		const double increment = 0.1;
-		const int TOLX = 5000;
-		int iterations = 0;
+		const double TOLX = 0.01;
+		int currentIteration = 0;
+		const int maxIterations = 1000;
 
-		while (ksi != fi(ksi) && fiPrim(ksi) != fiPrim(previousKsi) && fiPrim(ksi) < TOLX)
+		while (fiPrim(ksi) != fiPrim(previousKsi) && currentIteration < maxIterations)
 		{
-			iterations++;
+			currentIteration++;
 			previousKsi = ksi;
 			ksi = fiPrim(ksi);
-			std::cout << ksi << std::endl;
-			ksi += increment;
+
+			std::cout 
+				<< "Iteracja: "
+				<< currentIteration
+				<< " Wartosc: "
+				<< ksi 
+				<< " Reziduum: "
+				<< abs(fi(ksi))
+				<< std::endl;
+
+			if (fi(ksi) <= TOLX)
+			{
+				std::cout << "Pierwiastek: " << ksi << std::endl;
+				return;
+			}
 		}
+
+		std::cout << "NIE ZNALEZIONO PIERWIASTKA" << std::endl;
 	}
 }
