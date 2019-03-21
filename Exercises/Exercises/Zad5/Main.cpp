@@ -3,40 +3,50 @@
 
 
 
-void reduceRow(std::vector<std::vector<double>>& a, int rowIndex)
+void reduceRow(std::vector<std::vector<double>>& a, int rowIndex, int iter)
 {
 	int rowWidth = a[0].size();
+	int start = iter;
 
 	std::vector<double> currentRow = a[rowIndex];
 
-	for (int colIndex = 0; colIndex < rowWidth; colIndex++)
+	for (int colIndex = start; colIndex < rowWidth; colIndex++)
 	{
 		double currentValue = currentRow[colIndex];
-		double firstRowValueAbove = a[0][colIndex];
-		double firstCurrentRowValue = currentRow[0];
-		double firstValue = a[0][0];
+		double firstRowValueAbove = a[start][colIndex];
+		double firstCurrentRowValue = currentRow[start];
+		double firstValue = a[start][start];
 		double result = currentValue - (firstRowValueAbove * (firstCurrentRowValue / firstValue));
 		a[rowIndex][colIndex] = result;
 	}
-
-	for (int i = 0; i < rowWidth; i++)
-		std::cout << a[rowIndex][i] << ", ";
 }
 
 int main()
 {
+
 	std::vector<std::vector<double>> a =
 	{
-						  // a[x][y], x - row, y - col
-		{  6, 2, 2,  4 }, // a[0][0] == 6
-		{ -1, 2, 2, -3 }, // a[1][0] == -1
-		{  0, 1, 1,  4 },
-		{  1, 0, 2,  3 }
+		{  1, 2, 5 }, // a[x][y], x - row, y - col
+		{  3, 4, 6 },
+		{  7, 8, 9 }
 	};
 
-	for (int index = 1; index < a.size(); index++)
+
+	for (int iter = 0; iter < a.size() - 1; iter++)
 	{
-		reduceRow(a, index);
+		for (int index = 1 + iter; index < a.size(); index++)
+		{
+			reduceRow(a, index, iter);
+		}
+	}
+
+	for (int y = 0; y < a.size(); y++)
+	{
+		for (int z = 0; z < a.size(); z++)
+		{
+			std::cout << a[y][z] << ", ";
+		}
+
 		std::cout << std::endl;
 	}
 
