@@ -1,11 +1,22 @@
 #include <iostream>
 #include <vector>
 
+void printResult(std::vector<std::vector<double>>& a)
+{
+	for (int y = 0; y < a.size(); y++)
+	{
+		for (int z = 0; z < a.size(); z++)
+		{
+			std::cout << a[y][z] << ", ";
+		}
 
+		std::cout << std::endl;
+	}
+}
 
 void reduceRow(std::vector<std::vector<double>>& a, int rowIndex, int iter)
 {
-	int rowWidth = a[0].size();
+	int rowWidth = (int)a[0].size();
 	int start = iter;
 
 	std::vector<double> currentRow = a[rowIndex];
@@ -26,30 +37,73 @@ int main()
 
 	std::vector<std::vector<double>> a =
 	{
-		{  1, 2, 5 }, // a[x][y], x - row, y - col
-		{  3, 4, 6 },
-		{  7, 8, 9 }
+		{  6, 2, 2,  4 }, // a[x][y], x - row, y - col
+		{ -1, 2, 2, -3 },
+		{  0, 1, 1, 4 },
+		{  1, 0, 2, 3 }
 	};
 
-
-	for (int iter = 0; iter < a.size() - 1; iter++)
+	std::vector<double> b =
 	{
-		for (int index = 1 + iter; index < a.size(); index++)
+		1, -1, 2, 1
+	};
+
+	for (int startColumn = 0; startColumn < a.size() - 2; startColumn++)
+	{
+		for (int rowIndex = 1 + startColumn; rowIndex < a.size(); rowIndex++)
 		{
-			reduceRow(a, index, iter);
+			reduceRow(a, rowIndex, startColumn);
+
 		}
 	}
 
-	for (int y = 0; y < a.size(); y++)
+	for (int rowIndex = 1; rowIndex < a.size() - 1 /* ignore last row*/; rowIndex++)
 	{
-		for (int z = 0; z < a.size(); z++)
-		{
-			std::cout << a[y][z] << ", ";
-		}
+		double firstRowValue = a[rowIndex][rowIndex];
 
-		std::cout << std::endl;
+		if (firstRowValue == 0)
+		{
+			double max = firstRowValue;
+			int maxIndex = rowIndex;
+			for (int i = rowIndex; i < a.size(); i++)
+			{
+				if (a[i][rowIndex] > max)
+				{
+					// Pamietaj zeby jeszcze zamienic wektor b
+					max = a[i][rowIndex];
+					maxIndex = i;
+				}
+			}
+			if (max != firstRowValue)
+			{
+				std::vector<double> tempA = a[maxIndex];
+				a[maxIndex] = a[rowIndex];
+				a[rowIndex] = tempA;
+
+				double tempB = b[maxIndex];
+				b[maxIndex] = b[rowIndex];
+				b[rowIndex] = tempB;
+			}
+
+			std::cout 
+				<< std::endl 
+				<< "[MAX: " 
+				<< max 
+				<< " AT " 
+				<< maxIndex 
+				<< " SWAP WITH ROW " 
+				<< rowIndex
+				<< "]"
+				<< std::endl;
+		}
 	}
 
+	int n = (int)b.size();
+	double lastB = b[n - 1];
+	double lastA = a[n - 1][n - 1];
+	double xn = pow(lastB, n - 1) / pow(lastA, n - 1);
+
+	printResult(a);
 
 	std::cin.get();
 }
