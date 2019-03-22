@@ -1,7 +1,7 @@
 #include <iostream>
 #include <vector>
 
-void printResult(std::vector<std::vector<double>>& a)
+void printResult(std::vector<std::vector<double>>& a, std::vector<double>& b)
 {
 	for (int y = 0; y < a.size(); y++)
 	{
@@ -10,11 +10,16 @@ void printResult(std::vector<std::vector<double>>& a)
 			std::cout << a[y][z] << ", ";
 		}
 
+		std::cout << " | " << b[y];
+
 		std::cout << std::endl;
 	}
 }
 
-void reduceRow(std::vector<std::vector<double>>& a, int rowIndex, int iter)
+/*
+	Reduces row and returns first value in this truncated row before affecting the value.
+*/
+double reduceRow(std::vector<std::vector<double>>& a, int rowIndex, int iter)
 {
 	int rowWidth = (int)a[0].size();
 	int start = iter;
@@ -29,6 +34,52 @@ void reduceRow(std::vector<std::vector<double>>& a, int rowIndex, int iter)
 		double firstValue = a[start][start];
 		double result = currentValue - (firstRowValueAbove * (firstCurrentRowValue / firstValue));
 		a[rowIndex][colIndex] = result;
+	}
+
+	return currentRow[start];
+}
+
+void swapRowsIfNeeded(std::vector<std::vector<double>>& a, std::vector<double>& b)
+{
+	for (int rowIndex = 1; rowIndex < a.size() - 1 /* ignore last row*/; rowIndex++)
+	{
+		double firstRowValue = a[rowIndex][rowIndex];
+
+		if (firstRowValue == 0)
+		{
+			double max = firstRowValue;
+			int maxIndex = rowIndex;
+			for (int i = rowIndex; i < a.size(); i++)
+			{
+				if (a[i][rowIndex] > max)
+				{
+					max = a[i][rowIndex];
+					maxIndex = i;
+				}
+			}
+			if (max != firstRowValue)
+			{
+				std::vector<double> tempA = a[maxIndex];
+				a[maxIndex] = a[rowIndex];
+				a[rowIndex] = tempA;
+
+				// Pamietaj zeby jeszcze zamienic wektor b
+				double tempB = b[maxIndex];
+				b[maxIndex] = b[rowIndex];
+				b[rowIndex] = tempB;
+			}
+
+			std::cout
+				<< std::endl
+				<< "[MAX: "
+				<< max
+				<< " AT "
+				<< maxIndex
+				<< " SWAP WITH ROW "
+				<< rowIndex
+				<< "]"
+				<< std::endl;
+		}
 	}
 }
 
@@ -52,58 +103,24 @@ int main()
 	{
 		for (int rowIndex = 1 + startColumn; rowIndex < a.size(); rowIndex++)
 		{
-			reduceRow(a, rowIndex, startColumn);
+			double firstValueInRow = reduceRow(a, rowIndex, startColumn);
 
+			double currentB = b[rowIndex];
+			double firstValueInB = b[startColumn];
+			double firstValueInA = a[startColumn][startColumn];
+			double newB = b[rowIndex] - (firstValueInB * (firstValueInRow / firstValueInA));
+			b[rowIndex] = newB;
 		}
 	}
 
-	for (int rowIndex = 1; rowIndex < a.size() - 1 /* ignore last row*/; rowIndex++)
-	{
-		double firstRowValue = a[rowIndex][rowIndex];
-
-		if (firstRowValue == 0)
-		{
-			double max = firstRowValue;
-			int maxIndex = rowIndex;
-			for (int i = rowIndex; i < a.size(); i++)
-			{
-				if (a[i][rowIndex] > max)
-				{
-					// Pamietaj zeby jeszcze zamienic wektor b
-					max = a[i][rowIndex];
-					maxIndex = i;
-				}
-			}
-			if (max != firstRowValue)
-			{
-				std::vector<double> tempA = a[maxIndex];
-				a[maxIndex] = a[rowIndex];
-				a[rowIndex] = tempA;
-
-				double tempB = b[maxIndex];
-				b[maxIndex] = b[rowIndex];
-				b[rowIndex] = tempB;
-			}
-
-			std::cout 
-				<< std::endl 
-				<< "[MAX: " 
-				<< max 
-				<< " AT " 
-				<< maxIndex 
-				<< " SWAP WITH ROW " 
-				<< rowIndex
-				<< "]"
-				<< std::endl;
-		}
-	}
+	swapRowsIfNeeded(a, b);
 
 	int n = (int)b.size();
 	double lastB = b[n - 1];
 	double lastA = a[n - 1][n - 1];
 	double xn = pow(lastB, n - 1) / pow(lastA, n - 1);
 
-	printResult(a);
+	printResult(a, b);
 
 	std::cin.get();
 }
