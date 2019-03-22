@@ -83,6 +83,14 @@ void swapRowsIfNeeded(std::vector<std::vector<double>>& a, std::vector<double>& 
 	}
 }
 
+void reduceVectorB(std::vector<double>& b, int rowIndex, int startColumn, double firstValueInRow, double firstValueInA)
+{
+	double currentB = b[rowIndex];
+	double firstValueInB = b[startColumn];
+	double newB = b[rowIndex] - (firstValueInB * (firstValueInRow / firstValueInA));
+	b[rowIndex] = newB;
+}
+
 int main()
 {
 
@@ -105,11 +113,8 @@ int main()
 		{
 			double firstValueInRow = reduceRow(a, rowIndex, startColumn);
 
-			double currentB = b[rowIndex];
-			double firstValueInB = b[startColumn];
 			double firstValueInA = a[startColumn][startColumn];
-			double newB = b[rowIndex] - (firstValueInB * (firstValueInRow / firstValueInA));
-			b[rowIndex] = newB;
+			reduceVectorB(b, rowIndex, startColumn, firstValueInRow, firstValueInA);
 		}
 	}
 
