@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include "RowDetails.h"
 
 void printResult(std::vector<std::vector<double>>& a, std::vector<double>& b)
 {
@@ -16,27 +17,27 @@ void printResult(std::vector<std::vector<double>>& a, std::vector<double>& b)
 	}
 }
 
-/*
-	Reduces row and returns first value in this truncated row before affecting the value.
-*/
-double reduceRow(std::vector<std::vector<double>>& a, int rowIndex, int iter)
+RowDetails reduceRow(std::vector<std::vector<double>>& a, int rowIndex, int iter)
 {
 	int rowWidth = (int)a[0].size();
 	int start = iter;
 
 	std::vector<double> currentRow = a[rowIndex];
 
+	double firstCurrentRowValue = currentRow[start];
+	double firstValue = a[start][start];
+	double rowCoefficient = (firstCurrentRowValue / firstValue);
+
 	for (int colIndex = start; colIndex < rowWidth; colIndex++)
 	{
 		double currentValue = currentRow[colIndex];
 		double firstRowValueAbove = a[start][colIndex];
-		double firstCurrentRowValue = currentRow[start];
-		double firstValue = a[start][start];
-		double result = currentValue - (firstRowValueAbove * (firstCurrentRowValue / firstValue));
+		double value = (firstRowValueAbove * rowCoefficient);
+		double result = currentValue - value;
 		a[rowIndex][colIndex] = result;
 	}
 
-	return currentRow[start];
+	return { currentRow[start], rowCoefficient};
 }
 
 void swapRowsIfNeeded(std::vector<std::vector<double>>& a, std::vector<double>& b)
@@ -102,30 +103,46 @@ int main()
 		{  1, 0, 2, 3 }
 	};
 
+	//std::vector<std::vector<double>> a =
+	//{
+	//	{  1, 4,-3 }, // a[x][y], x - row, y - col
+	//	{ -2, 8, 5 },
+	//	{  3, 4, 7 }
+	//};
+
 	std::vector<double> b =
 	{
 		1, -1, 2, 1
 	};
 
+	std::vector<std::vector<double>> l =
+	{
+		{  1, 0, 0, 0 },
+		{  0, 1, 0, 0 },
+		{  0, 0, 1, 0 },
+		{  0, 0, 0, 1 }
+	};
+
 	for (int startColumn = 0; startColumn < a.size() - 2; startColumn++)
 	{
+		double firstValueInA = a[startColumn][startColumn];
+
 		for (int rowIndex = 1 + startColumn; rowIndex < a.size(); rowIndex++)
 		{
-			double firstValueInRow = reduceRow(a, rowIndex, startColumn);
-
-			double firstValueInA = a[startColumn][startColumn];
-			reduceVectorB(b, rowIndex, startColumn, firstValueInRow, firstValueInA);
+			RowDetails rowDetails = reduceRow(a, rowIndex, startColumn);
+			l[rowIndex][startColumn] = rowDetails.Coefficient;
+			reduceVectorB(b, rowIndex, startColumn, rowDetails.FirstValue, firstValueInA);
 		}
 	}
 
 	swapRowsIfNeeded(a, b);
 
-	int n = (int)b.size();
-	double lastB = b[n - 1];
-	double lastA = a[n - 1][n - 1];
-	double xn = pow(lastB, n - 1) / pow(lastA, n - 1);
-
 	printResult(a, b);
+
+	double lastB = b[b.size() - 1];
+	double lastA = a[a.size() - 1][a.size() - 1];
+	int n = (int)b.size();
+	double xn = pow(lastB, n - 1) / pow(lastA, n - 1);
 
 	std::cin.get();
 }
