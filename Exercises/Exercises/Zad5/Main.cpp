@@ -1,19 +1,41 @@
 #include <iostream>
 #include <vector>
+#include <iomanip>
 #include "RowDetails.h"
 
-void printResult(std::vector<std::vector<double>>& a, std::vector<double>& b)
+void printResult(std::vector<std::vector<double>>& a, std::vector<double>& b, std::vector<std::vector<double>>& l, std::vector<double>& x)
 {
+	std::cout << "A:" << std::endl;
+
 	for (int y = 0; y < a.size(); y++)
 	{
 		for (int z = 0; z < a.size(); z++)
 		{
-			std::cout << a[y][z] << ", ";
+			std::cout << std::setw(8) << a[y][z] << ", ";
 		}
 
 		std::cout << " | " << b[y];
 
 		std::cout << std::endl;
+	}
+
+	std::cout << "L:" << std::endl;
+
+	for (int y = 0; y < l.size(); y++)
+	{
+		for (int z = 0; z < l.size(); z++)
+		{
+			std::cout << std::setw(10) << l[y][z] << ", ";
+		}
+
+		std::cout << std::endl;
+	}
+
+	std::cout << "WYNIK:" << std::endl;
+
+	for (int i = 0; i < x.size(); i++)
+	{
+		std::cout << x[i] << std::endl;
 	}
 }
 
@@ -37,7 +59,7 @@ RowDetails reduceRow(std::vector<std::vector<double>>& a, int rowIndex, int iter
 		a[rowIndex][colIndex] = result;
 	}
 
-	return { currentRow[start], rowCoefficient};
+	return { currentRow[start], rowCoefficient };
 }
 
 void swapRowsIfNeeded(std::vector<std::vector<double>>& a, std::vector<double>& b)
@@ -136,13 +158,40 @@ int main()
 	}
 
 	swapRowsIfNeeded(a, b);
+	
+	std::vector<double> y = std::vector<double>(b.size());
+	std::vector<double> x = std::vector<double>(b.size());
 
-	printResult(a, b);
+	{
+		double xn = pow(b[b.size() - 1], b.size() - 1) / pow(a[a.size() - 1][a.size() - 1], b.size() - 1);
 
-	double lastB = b[b.size() - 1];
-	double lastA = a[a.size() - 1][a.size() - 1];
-	int n = (int)b.size();
-	double xn = pow(lastB, n - 1) / pow(lastA, n - 1);
+		for (int i = (int)b.size() - 2; i >= 0; i--)
+		{
+			double sum = 0;
+			for (int j = i + 1; j < a.size(); j++)
+			{
+				sum += pow(a[i][j], i - 1) * y[j];
+			}
+			y[i] = (pow(b[i], i - 1) - sum) / pow(a[i][i], i - 1);
+		}
+	}
+
+	{
+		double xn = pow(y[y.size() - 1], y.size() - 2) / pow(a[a.size() - 1][a.size() - 1], a.size() - 2);
+		double previous = xn;
+
+		for (int i = (int)y.size() - 2; i >= 0; i--)
+		{
+			double sum = 0;
+			for (int j = i + 1; j < a.size(); j++)
+			{
+				sum += pow(a[i][j], i - 1) * y[j];
+			}
+			x[i] = (pow(y[i], i - 1) - sum) / pow(a[i][i], i - 1);
+		}
+	}
+
+	printResult(a, b, l, x);
 
 	std::cin.get();
 }
