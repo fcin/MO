@@ -75,14 +75,25 @@ void printSetup(std::vector<std::vector<double>>& matrix, std::vector<double>& b
 
 int main()
 {
-	std::vector<std::vector<double>> matrix = 
+	std::vector<std::vector<double>> matrix =
 	{
-		{ 1, 2, 0 },
-		{ 4, 5, 6 },
-		{ 0, 8, 9 },
+		{ 30,   2 / 3,	0, 0, 0, 0 },
+		{ 3 / 4, 20,  5 / 6, 0, 0, 0 },
+		{ 0, 7 / 8, 10, 9 / 10, 0, 0 },
+		{ 0, 0,	11 / 12, 10, 13 / 14, 0 },
+		{ 0, 0,	0, 15 / 16, 20, 17 / 18 },
+		{ 0, 0,	0, 0, 19 / 29, 30 }
 	};
 
-	std::vector<double> b = { 10, 20, 30 };
+	std::vector<double> b = 
+	{ 
+		94/3,
+		173/4,
+		581/20,
+		-815/28,
+		-6301/144,
+		-319/10
+	};
 
 	printSetup(matrix, b);
 
