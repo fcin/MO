@@ -57,7 +57,7 @@ void printSetup(std::vector<std::vector<double>>& matrix, std::vector<double>& b
 	{
 		for (int index2 = 0; index2 < matrix[0].size(); index2++)
 		{
-			std::cout << std::setw(8) << matrix[index][index2];
+			std::cout << std::setw(12) << matrix[index][index2];
 		}
 
 		std::cout << std::endl;
@@ -77,22 +77,22 @@ int main()
 {
 	std::vector<std::vector<double>> matrix =
 	{
-		{ 30,   2 / 3,	0, 0, 0, 0 },
-		{ 3 / 4, 20,  5 / 6, 0, 0, 0 },
-		{ 0, 7 / 8, 10, 9 / 10, 0, 0 },
-		{ 0, 0,	11 / 12, 10, 13 / 14, 0 },
-		{ 0, 0,	0, 15 / 16, 20, 17 / 18 },
-		{ 0, 0,	0, 0, 19 / 29, 30 }
+		{ 30.0,   2.0 / 3.0,	0, 0, 0, 0 },
+		{ 3.0 / 4.0, 20.0,  5.0 / 6.0, 0, 0, 0 },
+		{ 0, 7.0 / 8.0, 10.0, 9.0 / 10.0, 0, 0 },
+		{ 0, 0,	11.0 / 12.0, 10.0, 13.0 / 14.0, 0 },
+		{ 0, 0,	0, 15.0 / 16.0, 20.0, 17.0 / 18.0 },
+		{ 0, 0,	0, 0, 19.0 / 29.0, 30.0 }
 	};
 
-	std::vector<double> b = 
-	{ 
-		94/3,
-		173/4,
-		581/20,
-		-815/28,
-		-6301/144,
-		-319/10
+	std::vector<double> b =
+	{
+		94.0 / 3.0,
+		173.0 / 4.0,
+		581.0 / 20.0,
+		-815.0 / 28.0,
+		-6301.0 / 144.0,
+		-319.0 / 10.0
 	};
 
 	printSetup(matrix, b);
