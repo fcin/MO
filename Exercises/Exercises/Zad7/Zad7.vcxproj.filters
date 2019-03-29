@@ -26,5 +26,8 @@
     <ClInclude Include="GaussSeidel.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="SOR.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

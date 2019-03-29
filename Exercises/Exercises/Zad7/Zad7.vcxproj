@@ -120,6 +120,7 @@
   <ItemGroup>
     <ClInclude Include="GaussSeidel.h" />
     <ClInclude Include="Jacobi.h" />
+    <ClInclude Include="SOR.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
