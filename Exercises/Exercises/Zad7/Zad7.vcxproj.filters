@@ -23,5 +23,8 @@
     <ClInclude Include="Jacobi.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="GaussSeidel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -1,10 +1,12 @@
 #include <iostream>
 #include <vector>
 #include "Jacobi.h"
+#include "GaussSeidel.h"
 
 int main()
 {
-	JacobiMethods::Jacobi();
+	//JacobiMethods::Jacobi();
+	GaussSeidelMethods::GaussSeidel();
 
 	std::cin.get();
 
